@@ -39,6 +39,7 @@ let longText = 'Four score and seven years ago our fathers brought forth' +
 
 function longestSentence(text) {
   const longest = text
+    .trim()
     .split(/(?<=[.!?])\s+/)
     .map(sentence => {
       return {
@@ -53,6 +54,8 @@ function longestSentence(text) {
 }
 
 longestSentence(longText);
+longestSentence('    I yam what I yam!   ');
+longestSentence('$    I yam what I yam!   ');
 
 // console output
 // It is rather for us to be here dedicated to the great task remaining before
