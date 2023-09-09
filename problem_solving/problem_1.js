@@ -28,7 +28,8 @@
 //  to clarify: if there are any other non-digit characters (like letters),
 //          is the entire number invalid?
 //    for now, the assumption is that any other character in the string
-//    makes it invalid
+//    makes it invalid (per walkthrough, cleaning the number gets rid of *any*
+//    non-digit chars)
 // Examples/edge cases: coded below
 // D: strings (replace and match with regex)
 // A:
@@ -39,26 +40,33 @@
 //    - if match, return string (remove first number if 11 digits)
 //  note: '0000000000' is a configurable number, so make it a constant
 
+// REFACTOR: Walkthrough indicates that we are ignoring *any* non-digit chars
+// in the given string, not just the ones that were indicated; the presence of
+// any non-digit character does not in itself make the number invalid
+
 function cleanPhoneNumber(string) {
   const INVALID_NUMBER = '0000000000';
 
-  const reInvalidChars = /[-.()\s]/g;
+  // const reInvalidChars = /[-.()\s]/g;
+  const reInvalidChars = /\D/g; // REFACTOR - see note
   const cleanNumber = string.replace(reInvalidChars, '');
 
-  const reValidNumber = /(^(?<n>\d{10})$|^1(?<p>\d{10})$)/;
+  const reValidNumber = /(^1?(?<n>\d{10})$)/;
 
   const matches = cleanNumber.match(reValidNumber);
 
-  return matches?.groups.n ?? matches?.groups.p ?? INVALID_NUMBER;
+  return matches?.groups.n ?? INVALID_NUMBER;
 }
 
 console.log(cleanPhoneNumber(`1234567899`)); // '1234567899'
 console.log(cleanPhoneNumber('11234567899')); // '1234567899'
 console.log(cleanPhoneNumber('21234567899')); // '0000000000'
 console.log(cleanPhoneNumber('(123)456-7899')); // '1234567899'
+console.log(cleanPhoneNumber('1-(123)456-7899')); // '1234567899'
 console.log(cleanPhoneNumber('123.456.7899')); // '1234567899'
 console.log(cleanPhoneNumber('123 456 7899')); // '1234567899'
 console.log(cleanPhoneNumber('123456789')); // '0000000000'
 console.log(cleanPhoneNumber('123456789999')); // '0000000000'
-console.log(cleanPhoneNumber('123456789a')); // '0000000000'
+console.log(cleanPhoneNumber('1234567899a')); // '1234567899'
+console.log(cleanPhoneNumber('')); // '0000000000'
 
